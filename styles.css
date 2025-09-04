@@ -183,12 +183,37 @@ body {
 }
 
 /* Dark mode login modal */
+[data-theme="dark"] .login-modal {
+    background: var(--bg-primary) !important;
+    color: var(--text-primary);
+}
+
 [data-theme="dark"] .login-header h2 {
     color: var(--text-primary);
 }
 
 [data-theme="dark"] .login-header p {
     color: var(--text-secondary);
+}
+
+[data-theme="dark"] .login-modal input {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .login-modal label {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .login-modal .btn-ghost {
+    color: var(--text-secondary);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .login-modal .btn-ghost:hover {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
 }
 
 /* Dark mode specific overrides */
