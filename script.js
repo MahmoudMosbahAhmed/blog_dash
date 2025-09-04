@@ -1096,13 +1096,13 @@ const dashboard = {
                                 ${content.keywords.slice(0, 8).map(keyword => `<span style="background: #667eea; color: white; padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.8rem;">${keyword}</span>`).join('')}
                                 ${content.keywords.length > 8 ? `<span style="color: #64748b; font-size: 0.8rem; padding: 0.25rem 0.5rem;">+${content.keywords.length - 8} more</span>` : ''}
                         </div>
-                        </div>
+                    </div>
                     `;
                 }
                 
                 modalContent += `
+                                </div>
                         </div>
-                    </div>
                 `;
             }
 
@@ -1190,8 +1190,8 @@ const dashboard = {
                             ${content.qc_results.recommendations.length > 4 ? `
                                 <div style="text-align: center; color: #64748b; font-size: 0.85rem; padding: 0.5rem;">
                                     +${content.qc_results.recommendations.length - 4} more recommendations
-                    </div>
-                ` : ''}
+                                </div>
+                            ` : ''}
                         </div>
                     </div>
                 `;
@@ -1210,7 +1210,7 @@ const dashboard = {
                         </h4>
                         <div id="${contentId}" style="background: #fafafa; border: 1px solid #e5e7eb; border-radius: 10px; padding: 1.5rem; max-height: 300px; overflow-y: auto; line-height: 1.6; font-size: 0.95rem;">
                             ${contentPreview}
-                        </div>
+                    </div>
                         ${content.content.length > 500 ? `
                             <div style="text-align: center; margin-top: 1rem;">
                                 <button id="showFullBtn_${contentId}" onclick="dashboard.showFullContent('${contentId}', 'showFullBtn_${contentId}')" 
@@ -1219,9 +1219,9 @@ const dashboard = {
                                 </button>
                             </div>
                         ` : ''}
-                    </div>
-                `;
-                
+                </div>
+            `;
+            
                 // Store full content for later use
                 if (content.content.length > 500) {
                     window.fullContentData = window.fullContentData || {};
@@ -1510,7 +1510,7 @@ const dashboard = {
                     showToast('Content loaded from cache', 'info');
                 }
             } else {
-                showToast('Failed to load content details', 'error');
+            showToast('Failed to load content details', 'error');
             }
         }
     },
@@ -3026,7 +3026,7 @@ ${JSON.stringify(result, null, 2)}
             };
 
             console.log('Review data:', reviewData);
-
+            
             await api.reviewBulkIdeas(jobId, reviewData);
             
             showToast(`Successfully approved ${approvedIdeas.length} ideas!`, 'success');
@@ -3801,6 +3801,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('dashboard').style.display = 'flex';
             document.getElementById('currentUser').textContent = currentUser;
             
+            // Initialize theme system for dashboard
+            setTimeout(() => {
+                initializeThemeSystem();
+            }, 100);
+            
             // Load categories after successful authentication
             try {
                 await brainstorm.loadCategories();
@@ -3818,6 +3823,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     } else {
         document.getElementById('loginModal').style.display = 'block';
+        
+        // Initialize theme toggle for login screen
+        setTimeout(() => {
+            initializeThemeSystem();
+        }, 100);
     }
     
     // Login form
@@ -3837,6 +3847,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('loginModal').style.display = 'none';
             document.getElementById('dashboard').style.display = 'flex';
             document.getElementById('currentUser').textContent = currentUser;
+            
+            // Initialize theme system for dashboard
+            setTimeout(() => {
+                initializeThemeSystem();
+            }, 100);
             
             showToast('Login successful!', 'success');
             navigation.switchSection('overview');
@@ -4240,45 +4255,7 @@ window.addEventListener('unhandledrejection', (e) => {
         }
     };
 
-    // Theme Toggle Functionality
-    const themeToggle = document.getElementById('themeToggle');
-    const currentTheme = localStorage.getItem('dashboard-theme') || 'light';
-    
-    console.log('Initializing theme system...');
-    console.log('Theme toggle element:', themeToggle);
-    console.log('Current theme from storage:', currentTheme);
-    
-    // Apply saved theme
-    document.documentElement.setAttribute('data-theme', currentTheme);
-    console.log('Applied theme to document:', document.documentElement.getAttribute('data-theme'));
-    
-    updateThemeIcon(currentTheme);
-    
-    if (themeToggle) {
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
-            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-            
-            console.log('Theme toggle clicked:', currentTheme, '->', newTheme);
-            
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('dashboard-theme', newTheme);
-            updateThemeIcon(newTheme);
-            
-            console.log('Theme applied:', document.documentElement.getAttribute('data-theme'));
-            
-            showToast(`Switched to ${newTheme} mode`, 'success');
-        });
-    } else {
-        console.error('Theme toggle button not found!');
-    }
-
-    function updateThemeIcon(theme) {
-        const icon = themeToggle?.querySelector('i');
-        if (icon) {
-            icon.className = theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
-        }
-    }
+    // Theme system will be initialized when login modal is shown
 
     // Notifications Functionality
     const notificationsBtn = document.getElementById('notificationsBtn');
@@ -4661,6 +4638,71 @@ const contentEditor = {
         this.currentContentId = null;
     }
 };
+
+// Initialize theme system function
+function initializeThemeSystem() {
+    // Theme Toggle Functionality
+    const themeToggle = document.getElementById('themeToggle');
+    const themeToggleLogin = document.getElementById('themeToggleLogin');
+    const currentTheme = localStorage.getItem('dashboard-theme') || 'light';
+    
+    console.log('Initializing theme system...');
+    console.log('Theme toggle element:', themeToggle);
+    console.log('Theme toggle login element:', themeToggleLogin);
+    console.log('Current theme from storage:', currentTheme);
+    
+    // Apply saved theme
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    console.log('Applied theme to document:', document.documentElement.getAttribute('data-theme'));
+    
+    updateThemeIcon(currentTheme);
+    updateThemeIconLogin(currentTheme);
+    
+    // Function to toggle theme
+    function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        
+        console.log('Theme toggle clicked:', currentTheme, '->', newTheme);
+        
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('dashboard-theme', newTheme);
+        updateThemeIcon(newTheme);
+        updateThemeIconLogin(newTheme);
+        
+        console.log('Theme applied:', document.documentElement.getAttribute('data-theme'));
+        
+        showToast(`Switched to ${newTheme} mode`, 'success');
+    }
+
+    if (themeToggle) {
+        themeToggle.addEventListener('click', toggleTheme);
+    } else {
+        console.error('Theme toggle button not found!');
+    }
+
+    if (themeToggleLogin) {
+        themeToggleLogin.addEventListener('click', toggleTheme);
+        console.log('Theme toggle login button found and event listener added!');
+    } else {
+        console.error('Theme toggle login button not found!');
+    }
+
+    function updateThemeIcon(theme) {
+        const icon = themeToggle?.querySelector('i');
+        if (icon) {
+            icon.className = theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+        }
+    }
+
+    function updateThemeIconLogin(theme) {
+        const icon = themeToggleLogin?.querySelector('i');
+        if (icon) {
+            icon.className = theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+            console.log('Updated login theme icon to:', theme);
+        }
+    }
+}
 
 // Export for global access
 window.dashboard = dashboard;
