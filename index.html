@@ -579,10 +579,30 @@
 
                                 <!-- SEO Tab -->
                                 <div id="editor-seo" class="editor-tab">
+                                    <div class="seo-score-section" id="seoScoreSection" style="display: none;">
+                                        <div class="seo-score-card">
+                                            <div class="seo-score-header">
+                                                <h3>SEO Analysis</h3>
+                                                <div class="seo-score-badge" id="seoScoreBadge">--/100</div>
+                                            </div>
+                                            <div class="seo-checklist" id="seoChecklist">
+                                                <!-- SEO checklist items will be populated by JavaScript -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
                                     <div class="form-group">
                                         <label for="editKeywords">Keywords</label>
                                         <input type="text" id="editKeywords" name="keywords" placeholder="keyword1, keyword2, keyword3">
-                                        <small>Separate keywords with commas</small>
+                                        <small>Separate keywords with commas. First keyword is the primary keyword.</small>
+                                    </div>
+                                    
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="editMetaDescription">Meta Description</label>
+                                            <textarea id="editMetaDescription" name="meta_description" placeholder="SEO meta description (150-160 characters)" maxlength="160" rows="3"></textarea>
+                                            <small><span id="metaDescLength">0</span>/160 characters</small>
+                                        </div>
                                     </div>
                                     
                                     <div class="form-row">
@@ -605,6 +625,12 @@
                                                 <option value="archived">Archived</option>
                                             </select>
                                         </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="editImageAlt">Image Alt Text</label>
+                                        <input type="text" id="editImageAlt" name="image_alt_text" placeholder="Descriptive alt text for the main image">
+                                        <small>Include your primary keyword naturally in the alt text</small>
                                     </div>
                                 </div>
 
@@ -716,9 +742,9 @@
                                 <div class="form-group">
                                     <label for="aiTargetLength">Target Length</label>
                                     <select id="aiTargetLength" name="target_length">
-                                        <option value="short">Short (500-800 words)</option>
-                                        <option value="medium" selected>Medium (800-1200 words)</option>
-                                        <option value="long">Long (1200+ words)</option>
+                                        <option value="short">Short (800-1000 words)</option>
+                                        <option value="medium" selected>Medium (1000-1500 words)</option>
+                                        <option value="long">Long (1500-2000 words)</option>
                                     </select>
                                 </div>
                                                             <div class="form-group">
