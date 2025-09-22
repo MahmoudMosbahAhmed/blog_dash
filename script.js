@@ -2129,19 +2129,19 @@ const contentCreator = {
             }
             
             // Convert target_length from string to number
-            let targetLength = 1500; // default
+            let targetLength = 1300; // default
             switch (formData.target_length) {
                 case 'short':
-                    targetLength = 800;
+                    targetLength = 900;
                     break;
                 case 'medium':
-                    targetLength = 1500;
+                    targetLength = 1300;
                     break;
                 case 'long':
-                    targetLength = 2500;
+                    targetLength = 1800;
                     break;
                 default:
-                    targetLength = parseInt(formData.target_length) || 1500;
+                    targetLength = parseInt(formData.target_length) || 1300;
             }
             
             const data = {
@@ -4704,6 +4704,88 @@ function initializeThemeSystem() {
     }
 }
 
+// SEO Helper Functions
+const seoHelper = {
+    // Initialize meta description counter
+    initMetaDescCounter() {
+        const metaDescInput = document.getElementById('editMetaDescription');
+        const counter = document.getElementById('metaDescLength');
+        
+        if (metaDescInput && counter) {
+            metaDescInput.addEventListener('input', function() {
+                const length = this.value.length;
+                counter.textContent = length;
+                
+                // Color coding based on length
+                if (length < 120) {
+                    counter.style.color = '#ef4444'; // Red - too short
+                } else if (length <= 160) {
+                    counter.style.color = '#10b981'; // Green - good
+                } else {
+                    counter.style.color = '#f59e0b'; // Orange - too long
+                }
+            });
+        }
+    },
+
+    // Display SEO checklist
+    displaySEOChecklist(content) {
+        const seoSection = document.getElementById('seoScoreSection');
+        const seoScoreBadge = document.getElementById('seoScoreBadge');
+        const seoChecklist = document.getElementById('seoChecklist');
+        
+        if (!content.qc_results || !seoSection) return;
+        
+        const score = content.qc_results.audit_summary?.overall_seo_score || 0;
+        seoScoreBadge.textContent = `${score}/100`;
+        
+        // Color code the badge
+        if (score >= 80) {
+            seoScoreBadge.style.background = 'rgba(16, 185, 129, 0.8)';
+        } else if (score >= 60) {
+            seoScoreBadge.style.background = 'rgba(245, 158, 11, 0.8)';
+        } else {
+            seoScoreBadge.style.background = 'rgba(239, 68, 68, 0.8)';
+        }
+        
+        // SEO checklist items
+        const checks = [
+            {
+                text: 'Primary keyword in title',
+                status: content.title?.toLowerCase().includes(content.keywords?.[0]?.toLowerCase()) ? 'pass' : 'fail'
+            },
+            {
+                text: 'Meta description (120-160 chars)',
+                status: content.meta_description && content.meta_description.length >= 120 && content.meta_description.length <= 160 ? 'pass' : 'fail'
+            },
+            {
+                text: 'Word count (800-2000 words)',
+                status: content.word_count >= 800 && content.word_count <= 2000 ? 'pass' : 'warning'
+            },
+            {
+                text: 'Image alt text provided',
+                status: content.image_alt_text ? 'pass' : 'fail'
+            }
+        ];
+        
+        seoChecklist.innerHTML = checks.map(check => `
+            <div class="seo-check-item">
+                <div class="seo-check-icon ${check.status}">
+                    <i class="fas ${check.status === 'pass' ? 'fa-check' : check.status === 'warning' ? 'fa-exclamation' : 'fa-times'}"></i>
+                </div>
+                <div class="seo-check-text">${check.text}</div>
+            </div>
+        `).join('');
+        
+        seoSection.style.display = 'block';
+    }
+};
+
+// Initialize SEO helpers when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    seoHelper.initMetaDescCounter();
+});
+
 // Export for global access
 window.dashboard = dashboard;
 window.brainstorm = brainstorm;
@@ -4711,3 +4793,4 @@ window.bulk = bulk;
 window.navigation = navigation;
 window.contentCreator = contentCreator;
 window.contentEditor = contentEditor;
+window.seoHelper = seoHelper;
